@@ -174,6 +174,136 @@ the number of messages and the total mesage size (in bytes).</p>
 </ul>
 </dd>
 </dl>
+<dl class="method">
+<dt id="components.Channel.send">
+<code class="sig-name descname">send</code><span class="sig-paren">(</span><em class="sig-param">msgtype</em>, <em class="sig-param">msg</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Channel.send" title="Permalink to this definition">¶</a></dt>
+<dd><p>src calls this proxy method in order to sent a msg</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>msgtype</strong> – constant custom types of msgs</p></li>
+<li><p><strong>msg</strong> – the msg to sent</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="components.Host">
+<em class="property">class </em><code class="sig-prename descclassname">components.</code><code class="sig-name descname">Host</code><span class="sig-paren">(</span><em class="sig-param">nid</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Hosts are used as nodes in the network.</p>
+<dl class="field-list simple">
+</dl>
+<dl class="method">
+<dt id="components.Host.add_handler">
+<code class="sig-name descname">add_handler</code><span class="sig-paren">(</span><em class="sig-param">msgtype</em>, <em class="sig-param">handler_func</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Host.add_handler" title="Permalink to this definition">¶</a></dt>
+<dd><p>add in the handlers list a user_given function to implement on the host</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>msgtype</strong> – type of msg</p></li>
+<li><p><strong>handler_func</strong> – the given function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="components.Host.connect">
+<code class="sig-name descname">connect</code><span class="sig-paren">(</span><em class="sig-param">peer</em>, <em class="sig-param">recv_channel</em>, <em class="sig-param">send_channel</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Host.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>creates a connection between the caller and its peer</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>peer</strong> – host to connect with</p></li>
+<li><p><strong>recv_channel</strong> – channel to receive msgs from peer</p></li>
+<li><p><strong>send_channel</strong> – channel to send msgs from peer</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="components.Host.receive">
+<code class="sig-name descname">receive</code><span class="sig-paren">(</span><em class="sig-param">channel</em>, <em class="sig-param">msgtype</em>, <em class="sig-param">msg</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Host.receive" title="Permalink to this definition">¶</a></dt>
+<dd><p>a method to receive a msg from the channel
+it is called by the ‘channel.send()’ proxy method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>channel</strong> – channel to receive the msg from</p></li>
+<li><p><strong>msgtype</strong> – type of the msg</p></li>
+<li><p><strong>msg</strong> – the msg to be received</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="components.Host.send">
+<code class="sig-name descname">send</code><span class="sig-paren">(</span><em class="sig-param">peer</em>, <em class="sig-param">msgtype</em>, <em class="sig-param">msg</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Host.send" title="Permalink to this definition">¶</a></dt>
+<dd><p>remote method that calls the ‘channel.send’ proxy method to send a msg</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>peer</strong> – host to send msg</p></li>
+<li><p><strong>msgtype</strong> – type of the msg</p></li>
+<li><p><strong>msg</strong> – the msg to be sent</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="components.StarNetwork">
+<em class="property">class </em><code class="sig-prename descclassname">components.</code><code class="sig-name descname">StarNetwork</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">node_type=&lt;class 'components.Host'&gt;</em>, <em class="sig-param">coord_type=&lt;class 'components.Host'&gt;</em>, <em class="sig-param">channel_type=&lt;class 'components.Channel'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#components.StarNetwork" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A star network  contains nodes, a coordinator and  their bidirectional
+connections.</p>
+<blockquote>
+<div><dl class="field-list simple">
+<dt class="field-odd">type k</dt>
+<dd class="field-odd"><p>int :param k: the number of nodes in the network</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="method">
+<dt id="components.StarNetwork.link">
+<code class="sig-name descname">link</code><span class="sig-paren">(</span><em class="sig-param">node</em>, <em class="sig-param">coord</em><span class="sig-paren">)</span><a class="headerlink" href="#components.StarNetwork.link" title="Permalink to this definition">¶</a></dt>
+<dd><p>creates bidirectional connection between a node and the coordinator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node</strong> – the node to connect with the coordinator</p></li>
+<li><p><strong>coord</strong> – the coordinator of the network</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
