@@ -1,17 +1,40 @@
 # Distributed_Data_Stream_Simulator
 
+---
+
 A python module for tracking network cost of simulated distributed algorithms.
 
 Using this module, one can implement distributed algorithms at a high level and
 simulate them while tracking communication activity.
 
+---
+
 ### Requirements
 - implemented with *python: version 3.6 (or higher)*
+- some not built-in python modules are required. To install run:
+       
+       pip install -r requirements.txt
+       
+---
 
 ### Run code
 
-### Run tests
+---
+
+### Testing
+
+---
+
 
 ### Documentation
 
-For the documentation **Sphinx 2.3.1.** and **ReadTheDocs** software was used.
+For the documentation **Sphinx 2.3.1.** software was used.
+
+To create documentation just run:
+
+    cd docs
+    make clean html
+    
+Then open the *index.html* with a browser. 
+
+

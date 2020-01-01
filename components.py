@@ -122,12 +122,13 @@ class Host:
         self.handlers[msgtype] = handler_func
 
 
+# TODO:create unit tests
 class StarNetwork:
     """
-     A star network  contains nodes, a coordinator and  their bidirectional
-     connections.
+     A star network  contains nodes, a coordinator and  their connections.
 
-      :type k: int :param k: the number of nodes in the network
+    :type k: int
+    :param k: the number of nodes in the network
     """
     def __init__(self, k, node_type=Host,
                  coord_type=Host, channel_type=Channel):
