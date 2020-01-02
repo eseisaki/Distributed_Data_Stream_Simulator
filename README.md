@@ -11,6 +11,11 @@ simulate them while tracking communication activity.
 
 ### Requirements
 - implemented with *python: version 3.6 (or higher)*
+- it is suggested to create a virtual environment by doing the following:
+        
+        python3 -m venv venv
+        source venv/bin/activate
+        
 - some not built-in python modules are required. To install run:
        
        pip install -r requirements.txt

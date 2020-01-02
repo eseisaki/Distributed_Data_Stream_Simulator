@@ -6,12 +6,14 @@ them in a standardized (and therefore auto-processable) manner."""
 
 __docformat__ = 'reStructuredText'
 
+from msg_types import *
+
 
 class Channel:
     """Point-to-point or broadcast unidirectional channel.
 
        Channels are used to collect network statistics. Each channel counts
-       the number of messages and the total mesage size (in bytes).
+       the number of messages and the total message size (in bytes).
 
 
        :type src: host
@@ -38,10 +40,10 @@ class Channel:
         self.bytes = 0  # no of msg recv
 
     # TODO: implement msgtype (maybe a class)
-    def send(self, msgtype, msg):
+    def send(self, msgtype: MsgType, msg):
         """
         src calls this proxy method in order to sent a msg
-
+        :type msgtype: MsgType
         :param msgtype: constant custom types of msgs
         :param msg: the msg to sent
         :return: None
@@ -49,7 +51,9 @@ class Channel:
         self.msg += 1
         self.bytes += msgtype.size_in_bytes(msg)
 
-        self.dest.recv(self, msgtype, msg) # call remote method to dst
+        self.dest.recv(self, msgtype, msg)  # call remote method to dst
+
+        return True
 
 
 class Host:
@@ -62,6 +66,7 @@ class Host:
     :type send_channels: dict :param send_channels: a list of all recv channels
     :type handlers: dict :param handlers: a list of all handler methods
     """
+
     def __init__(self, nid):
         """
         creates a host object given an id
@@ -130,6 +135,7 @@ class StarNetwork:
     :type k: int
     :param k: the number of nodes in the network
     """
+
     def __init__(self, k, node_type=Host,
                  coord_type=Host, channel_type=Channel):
         """
