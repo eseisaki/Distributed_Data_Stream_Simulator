@@ -1,10 +1,6 @@
 from pytest import fixture
 from components import *
-
-
-@fixture
-def echo_coord_handle_func():
-    return "Thanks node"
+from msg_types import MsgType
 
 
 def test_host():
@@ -23,7 +19,7 @@ def test_channel():
     assert c.src.nid == 1 and c.dst.nid == 2
 
 
-def test_connect_2_nodes():
+def test_connect_1_node():
     echo_net = StarNetwork(1)
 
     assert len(echo_net.nodes) == 1 and echo_net.coord is not None
@@ -31,21 +27,30 @@ def test_connect_2_nodes():
     echo_node = echo_net.nodes[0]
     echo_coord = echo_net.coord
 
-    assert echo_node.send_channels[echo_coord] ==\
-        echo_coord.recv_channels[echo_node], " Uplink is not created correctly"
+    assert echo_node.send_channels[echo_coord] == \
+        echo_coord.recv_channels[
+            echo_node], " Uplink is not created correctly"
 
 
-# TODO: understand and create echo_handler_functions
-def test_send_msg_1_node(echo_coord_handle_func):
+def echo_coord_handle_func(channel, msgtype, msg):
+    assert msg == "Hello coord"
 
+
+def test_send_msg_1_node():
     echo_net = StarNetwork(1)
     echo_node = echo_net.nodes[0]
     echo_coord = echo_net.coord
 
-    msg_node = "Hello coord"
+    echo_msg = "Hello coord"
+    echo_type = MsgType("string")
 
-    echo_coord.add_handler("string", echo_coord_handle_func)
-    echo_node.send(echo_coord, "string", msg_node)
+    echo_coord.add_handler(echo_type, echo_coord_handle_func)
+    echo_node.send(echo_coord, echo_type, echo_msg)
 
-def test_network_with_2_nodes():
-    pass
+
+def test_network_with_3_nodes():
+        echo_net = StarNetwork(3)
+
+        for i in range(3):
+            assert echo_net.nodes[i].nid == i
+

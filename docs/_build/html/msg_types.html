@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Python Module Index &mdash; Distributed Data Stream Simulator 2019 documentation</title>
+  <title>msg_types module &mdash; Distributed Data Stream Simulator 2019 documentation</title>
   
 
   
@@ -35,13 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
- 
-
-    <script type="text/javascript">
-      DOCUMENTATION_OPTIONS.COLLAPSE_INDEX = true;
-    </script>
-
-
+    <link rel="prev" title="components module" href="components.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -86,8 +80,12 @@
             
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">Distributed_Data_Stream_Simulator</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Distributed_Data_Stream_Simulator</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="components.html">components module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">msg_types module</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -133,10 +131,16 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Python Module Index</li>
+          <li><a href="modules.html">Distributed_Data_Stream_Simulator</a> &raquo;</li>
+        
+      <li>msg_types module</li>
     
     
       <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/msg_types.rst.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
     
@@ -148,38 +152,44 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
+  <div class="section" id="module-msg_types">
+<span id="msg-types-module"></span><h1>msg_types module<a class="headerlink" href="#module-msg_types" title="Permalink to this headline">¶</a></h1>
+<p>Define all possible different message types and a way to count their byte size.</p>
+<dl class="class">
+<dt id="msg_types.MsgType">
+<em class="property">class </em><code class="sig-prename descclassname">msg_types.</code><code class="sig-name descname">MsgType</code><span class="sig-paren">(</span><em class="sig-param">msgtype</em><span class="sig-paren">)</span><a class="headerlink" href="#msg_types.MsgType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Define basic message types and handle undefined message types</p>
+<dl class="method">
+<dt id="msg_types.MsgType.size_in_bytes">
+<code class="sig-name descname">size_in_bytes</code><span class="sig-paren">(</span><em class="sig-param">msg</em><span class="sig-paren">)</span><a class="headerlink" href="#msg_types.MsgType.size_in_bytes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Count the byte size of a given message</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>msg</strong> – the message to be counted</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>the size of the message in bytes</p>
+</dd>
+</dl>
+</dd></dl>
 
-   <h1>Python Module Index</h1>
+</dd></dl>
 
-   <div class="modindex-jumpbox">
-   <a href="#cap-c"><strong>c</strong></a> | 
-   <a href="#cap-m"><strong>m</strong></a>
-   </div>
-
-   <table class="indextable modindextable">
-     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
-     <tr class="cap" id="cap-c"><td></td><td>
-       <strong>c</strong></td><td></td></tr>
-     <tr>
-       <td></td>
-       <td>
-       <a href="components.html#module-components"><code class="xref">components</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="pcap"><td></td><td>&#160;</td><td></td></tr>
-     <tr class="cap" id="cap-m"><td></td><td>
-       <strong>m</strong></td><td></td></tr>
-     <tr>
-       <td></td>
-       <td>
-       <a href="msg_types.html#module-msg_types"><code class="xref">msg_types</code></a></td><td>
-       <em></em></td></tr>
-   </table>
+</div>
 
 
            </div>
            
           </div>
           <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="components.html" class="btn btn-neutral float-left" title="components module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
   
 
   <hr/>

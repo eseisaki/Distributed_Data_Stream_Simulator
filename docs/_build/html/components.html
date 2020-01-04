@@ -35,6 +35,7 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="msg_types module" href="msg_types.html" />
     <link rel="prev" title="Distributed_Data_Stream_Simulator" href="modules.html" /> 
 </head>
 
@@ -83,6 +84,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Distributed_Data_Stream_Simulator</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">components module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="msg_types.html">msg_types module</a></li>
 </ul>
 </li>
 </ul>
@@ -163,7 +165,7 @@ them in a standardized (and therefore auto-processable) manner.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Point-to-point or broadcast unidirectional channel.</p>
 <p>Channels are used to collect network statistics. Each channel counts
-the number of messages and the total mesage size (in bytes).</p>
+the number of messages and the total message size (in bytes).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -176,19 +178,12 @@ the number of messages and the total mesage size (in bytes).</p>
 </dl>
 <dl class="method">
 <dt id="components.Channel.send">
-<code class="sig-name descname">send</code><span class="sig-paren">(</span><em class="sig-param">msgtype</em>, <em class="sig-param">msg</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Channel.send" title="Permalink to this definition">¶</a></dt>
-<dd><p>src calls this proxy method in order to sent a msg</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>msgtype</strong> – constant custom types of msgs</p></li>
-<li><p><strong>msg</strong> – the msg to sent</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
+<code class="sig-name descname">send</code><span class="sig-paren">(</span><em class="sig-param">msgtype: msg_types.MsgType</em>, <em class="sig-param">msg</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Channel.send" title="Permalink to this definition">¶</a></dt>
+<dd><p>src calls this proxy method in order to sent a msg
+:type msgtype: MsgType
+:param msgtype: constant custom types of msgs
+:param msg: the msg to sent
+:return: None</p>
 </dd></dl>
 
 </dd></dl>
@@ -314,6 +309,8 @@ it is called by the ‘channel.send()’ proxy method</p>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="msg_types.html" class="btn btn-neutral float-right" title="msg_types module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="modules.html" class="btn btn-neutral float-left" title="Distributed_Data_Stream_Simulator" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>

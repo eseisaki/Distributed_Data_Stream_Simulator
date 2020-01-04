@@ -39,7 +39,6 @@ class Channel:
         self.msg = 0  # no of msg sent
         self.bytes = 0  # no of msg recv
 
-    # TODO: implement msgtype (maybe a class)
     def send(self, msgtype: MsgType, msg):
         """
         src calls this proxy method in order to sent a msg
@@ -51,9 +50,7 @@ class Channel:
         self.msg += 1
         self.bytes += msgtype.size_in_bytes(msg)
 
-        self.dest.recv(self, msgtype, msg)  # call remote method to dst
-
-        return True
+        self.dst.receive(self, msgtype, msg)  # call remote method to dst
 
 
 class Host:
