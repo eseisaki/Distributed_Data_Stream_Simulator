@@ -1,6 +1,5 @@
 # Distributed_Data_Stream_Simulator
 
----
 
 A python module for tracking network cost of simulated distributed algorithms.
 
@@ -24,10 +23,20 @@ simulate them while tracking communication activity.
 
 ### Run code
 
+In order to run an example algorithm , simply run:
+
+    python basic_gm.py
+
 ---
 
 ### Testing
+For testing **pytest** module was used.To run all test do the following:
 
+    pytest -v
+    
+In order to run a specific group of tests you have to run the following:
+
+    pytest -k {keyword} -v
 ---
 
 

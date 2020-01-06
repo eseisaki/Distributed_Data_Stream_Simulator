@@ -1,4 +1,3 @@
-from pytest import fixture
 from components import *
 from msg_types import MsgType
 
@@ -10,6 +9,7 @@ def test_host():
     assert h.nid == echo_id
 
 
+# ----------------------------------------------------------------------------
 def test_channel():
     echo_src = Host(1)
     echo_dst = Host(2)
@@ -19,6 +19,7 @@ def test_channel():
     assert c.src.nid == 1 and c.dst.nid == 2
 
 
+# ----------------------------------------------------------------------------
 def test_connect_1_node():
     echo_net = StarNetwork(1)
 
@@ -32,8 +33,19 @@ def test_connect_1_node():
             echo_node], " Uplink is not created correctly"
 
 
+# ----------------------------------------------------------------------------
 def echo_coord_handle_func(channel, msgtype, msg):
     assert msg == "Hello coord"
+
+    coord_msg = "Thanks node"
+    new_dst = channel.src
+    new_src = channel.dst
+
+    new_src.send(new_dst, msgtype, coord_msg)
+
+
+def echo_node_handle_func(channel, msgtype, msg):
+    assert msg == "Thanks node"
 
 
 def test_send_msg_1_node():
@@ -45,12 +57,15 @@ def test_send_msg_1_node():
     echo_type = MsgType("string")
 
     echo_coord.add_handler(echo_type, echo_coord_handle_func)
+    echo_node.add_handler(echo_type, echo_node_handle_func)
+
     echo_node.send(echo_coord, echo_type, echo_msg)
 
 
-def test_network_with_3_nodes():
-        echo_net = StarNetwork(3)
+# ----------------------------------------------------------------------------
+# TODO!!! test what happens for many nodes
+def test_network_with_2_nodes():
+    echo_net = StarNetwork(2)
 
-        for i in range(3):
-            assert echo_net.nodes[i].nid == i
-
+    for i in range(2):
+        assert echo_net.nodes[i].nid == i

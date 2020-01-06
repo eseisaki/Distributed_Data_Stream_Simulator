@@ -9,6 +9,7 @@ __docformat__ = 'reStructuredText'
 from msg_types import *
 
 
+# -----------------------------------------------------------------------------
 class Channel:
     """Point-to-point or broadcast unidirectional channel.
 
@@ -53,6 +54,7 @@ class Channel:
         self.dst.receive(self, msgtype, msg)  # call remote method to dst
 
 
+# ----------------------------------------------------------------------------
 class Host:
     """
     Hosts are used as nodes in the network.
@@ -100,7 +102,6 @@ class Host:
         """
         self.send_channels[peer].send(msgtype, msg)
 
-    # TODO: create handler methods
     def receive(self, channel, msgtype, msg):
         """
         a method to receive a msg from the channel
@@ -124,7 +125,7 @@ class Host:
         self.handlers[msgtype] = handler_func
 
 
-# TODO:create unit tests
+# ----------------------------------------------------------------------------
 class StarNetwork:
     """
      A star network  contains nodes, a coordinator and  their connections.
@@ -167,7 +168,3 @@ class StarNetwork:
 
         node.connect(coord, dnlink, uplink)
         coord.connect(node, uplink, dnlink)
-
-
-if __name__ == "__main__":
-    print("Let's begin this sucking project!")

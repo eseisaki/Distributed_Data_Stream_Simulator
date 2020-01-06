@@ -164,7 +164,6 @@
 </div>
 <div class="section" id="distributed-data-stream-simulator">
 <h1>Distributed_Data_Stream_Simulator<a class="headerlink" href="#distributed-data-stream-simulator" title="Permalink to this headline">¶</a></h1>
-<hr class="docutils" />
 <p>A python module for tracking network cost of simulated distributed algorithms.</p>
 <p>Using this module, one can implement distributed algorithms at a high level and
 simulate them while tracking communication activity.</p>
@@ -189,10 +188,22 @@ source venv/bin/activate
 <hr class="docutils" />
 <div class="section" id="run-code">
 <h2>Run code<a class="headerlink" href="#run-code" title="Permalink to this headline">¶</a></h2>
+<p>In order to run an example algorithm , simply run:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>python basic_gm.py
+</pre></div>
+</div>
 </div>
 <hr class="docutils" />
 <div class="section" id="testing">
 <h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>For testing <strong>pytest</strong> module was used.To run all test do the following:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>pytest -v
+</pre></div>
+</div>
+<p>In order to run a specific group of tests you have to run the following:</p>
+<div class="highlight-guess notranslate"><div class="highlight"><pre><span></span>pytest -k {keyword} -v
+</pre></div>
+</div>
 </div>
 <hr class="docutils" />
 <div class="section" id="documentation">
