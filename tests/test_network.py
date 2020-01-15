@@ -21,7 +21,7 @@ def test_channel():
 
 # ----------------------------------------------------------------------------
 def test_connect_1_node():
-    echo_net = StarNetwork(1)
+    echo_net = StarNetwork(1, Host, Host)
 
     assert len(echo_net.nodes) == 1 and echo_net.coord is not None
 
@@ -36,8 +36,9 @@ def test_connect_1_node():
 # ----------------------------------------------------------------------------
 def echo_coord_handle_func(channel, msgtype, msg):
     assert msg == "Hello coord"
+    msg_list = {channel.src: (msgtype, msg)}
 
-    coord_msg = "Thanks node"
+    coord_msg = "Thanks node" + str(channel.src.nid)
     new_dst = channel.src
     new_src = channel.dst
 
@@ -45,16 +46,16 @@ def echo_coord_handle_func(channel, msgtype, msg):
 
 
 def echo_node_handle_func(channel, msgtype, msg):
-    assert msg == "Thanks node"
+    assert msg == "Thanks node" + str(channel.dst.nid)
 
 
 def test_send_msg_1_node():
-    echo_net = StarNetwork(1)
+    echo_net = StarNetwork(1, Host, Host)
     echo_node = echo_net.nodes[0]
     echo_coord = echo_net.coord
 
     echo_msg = "Hello coord"
-    echo_type = MsgType("string")
+    echo_type = MsgType("type")
 
     echo_coord.add_handler(echo_type, echo_coord_handle_func)
     echo_node.add_handler(echo_type, echo_node_handle_func)
@@ -63,9 +64,34 @@ def test_send_msg_1_node():
 
 
 # ----------------------------------------------------------------------------
-# TODO!!! test what happens for many nodes
-def test_network_with_2_nodes():
-    echo_net = StarNetwork(2)
+def test_send_many_msgs():
+    echo_net = StarNetwork(1, Host, Host)
+    echo_node = echo_net.nodes[0]
+    echo_coord = echo_net.coord
+
+    echo_type = MsgType("type")
+
+    echo_coord.add_handler(echo_type, echo_coord_handle_func)
+    echo_node.add_handler(echo_type, echo_node_handle_func)
+
+    for i in range(10):
+        echo_msg = "Hello coord"
+        echo_node.send(echo_coord, echo_type, echo_msg)
+        assert echo_node.send_channels[echo_coord].msg == i+1
+
+
+# ----------------------------------------------------------------------------
+def test_broadcast_2_nodes():
+    echo_net = StarNetwork(2, Host, Host)
+
+    echo_msg = "Hello coord"
+    echo_type = MsgType("type")
+
+    echo_net.coord.add_handler(echo_type, echo_coord_handle_func)
 
     for i in range(2):
         assert echo_net.nodes[i].nid == i
+
+        echo_net.nodes[i].add_handler(echo_type, echo_node_handle_func)
+        echo_net.nodes[i].send(echo_net.coord, echo_type, echo_msg)
+

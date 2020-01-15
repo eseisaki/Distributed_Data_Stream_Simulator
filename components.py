@@ -40,6 +40,9 @@ class Channel:
         self.msg = 0  # no of msg sent
         self.bytes = 0  # no of msg recv
 
+        self.broad_msg = 0
+        self.broad_bytes = 0
+
     def send(self, msgtype: MsgType, msg):
         """
         src calls this proxy method in order to sent a msg
@@ -134,12 +137,14 @@ class StarNetwork:
     :param k: the number of nodes in the network
     """
 
-    def __init__(self, k, node_type=Host,
-                 coord_type=Host, channel_type=Channel):
+    def __init__(self, k, node_type,
+                 coord_type, channel_type=Channel):
         """
         initialize a star network object
 
         :param k: the number of nodes in the network
+        :param node_type: specify the node object
+        :param coord_type: specify the coordinator object
         """
         self.k = k  # no of nodes
         self.node_type = node_type

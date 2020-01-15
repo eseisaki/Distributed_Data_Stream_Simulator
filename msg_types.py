@@ -9,17 +9,7 @@ class MsgType:
     Define basic message types and handle undefined message types
     """
     def __init__(self, msgtype):
-
-        if msgtype == "char":
-            self.__bytes = 1
-        elif msgtype == "int":
-            self.__bytes = 4
-        elif msgtype == "long":
-            self.__bytes = 8
-        elif msgtype == "string":
-            self.__bytes = "count"
-        else:
-            raise AttributeError()
+        self.msgtype = msgtype
 
     def size_in_bytes(self, msg):
         """
@@ -28,7 +18,4 @@ class MsgType:
         :param msg: the message to be counted
         :return: the size of the message in bytes
         """
-        if self.__bytes is not "count":
-            return self.__bytes
-        else:
-            return len(msg.encode())
+        return sys.getsizeof(msg)
