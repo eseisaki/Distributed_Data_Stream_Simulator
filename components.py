@@ -6,10 +6,11 @@ them in a standardized (and therefore auto-processable) manner."""
 
 __docformat__ = 'reStructuredText'
 
-from msg_types import *
-
+import sys
 
 # -----------------------------------------------------------------------------
+# TODO: change size_in_bytes to a global function in this module
+
 class Channel:
     """Point-to-point or broadcast unidirectional channel.
 
@@ -36,23 +37,24 @@ class Channel:
         """
 
         self.src = src  # source node
-        self.dst = dst  # dest node
+        self.dst = dst  # destination node
         self.msg = 0  # no of msg sent
-        self.bytes = 0  # no of msg recv
+        self.bytes = 0  # no of msg receive
 
         self.broad_msg = 0
         self.broad_bytes = 0
 
-    def send(self, msgtype: MsgType, msg):
+    def send(self, msgtype, msg):
         """
         src calls this proxy method in order to sent a msg
-        :type msgtype: MsgType
-        :param msgtype: constant custom types of msgs
+
+        :type msgtype: string
+        :param msgtype:  types of msgs i.e. "alert"
         :param msg: the msg to sent
         :return: None
         """
         self.msg += 1
-        self.bytes += msgtype.size_in_bytes(msg)
+        self.bytes += sys.getsizeof(msg)
 
         self.dst.receive(self, msgtype, msg)  # call remote method to dst
 
@@ -80,6 +82,7 @@ class Host:
         self.recv_channels = {}
         self.send_channels = {}
         self.handlers = {}
+        self.store = 0  # basic storage ! must be modified
 
     def connect(self, peer, recv_channel, send_channel):
         """

@@ -1,5 +1,6 @@
+import pytest
+
 from components import *
-from msg_types import MsgType
 
 
 def test_host():
@@ -29,14 +30,13 @@ def test_connect_1_node():
     echo_coord = echo_net.coord
 
     assert echo_node.send_channels[echo_coord] == \
-        echo_coord.recv_channels[
-            echo_node], " Uplink is not created correctly"
+           echo_coord.recv_channels[
+               echo_node], " Uplink is not created correctly"
 
 
 # ----------------------------------------------------------------------------
 def echo_coord_handle_func(channel, msgtype, msg):
     assert msg == "Hello coord"
-    msg_list = {channel.src: (msgtype, msg)}
 
     coord_msg = "Thanks node" + str(channel.src.nid)
     new_dst = channel.src
@@ -55,7 +55,7 @@ def test_send_msg_1_node():
     echo_coord = echo_net.coord
 
     echo_msg = "Hello coord"
-    echo_type = MsgType("type")
+    echo_type = "type"
 
     echo_coord.add_handler(echo_type, echo_coord_handle_func)
     echo_node.add_handler(echo_type, echo_node_handle_func)
@@ -69,7 +69,7 @@ def test_send_many_msgs():
     echo_node = echo_net.nodes[0]
     echo_coord = echo_net.coord
 
-    echo_type = MsgType("type")
+    echo_type = "type"
 
     echo_coord.add_handler(echo_type, echo_coord_handle_func)
     echo_node.add_handler(echo_type, echo_node_handle_func)
@@ -77,7 +77,7 @@ def test_send_many_msgs():
     for i in range(10):
         echo_msg = "Hello coord"
         echo_node.send(echo_coord, echo_type, echo_msg)
-        assert echo_node.send_channels[echo_coord].msg == i+1
+        assert echo_node.send_channels[echo_coord].msg == i + 1
 
 
 # ----------------------------------------------------------------------------
@@ -85,7 +85,7 @@ def test_broadcast_2_nodes():
     echo_net = StarNetwork(2, Host, Host)
 
     echo_msg = "Hello coord"
-    echo_type = MsgType("type")
+    echo_type = "type"
 
     echo_net.coord.add_handler(echo_type, echo_coord_handle_func)
 
@@ -95,3 +95,37 @@ def test_broadcast_2_nodes():
         echo_net.nodes[i].add_handler(echo_type, echo_node_handle_func)
         echo_net.nodes[i].send(echo_net.coord, echo_type, echo_msg)
 
+
+# ----------------------------------------------------------------------------
+def iteration_node_handle(channel, msgtype, msg):
+    channel.src.store += msg
+    new_msg = channel.src.store
+
+    new_dst = channel.src
+    new_src = channel.dst
+
+    if msg < 11:
+        new_src.send(new_dst, msgtype, new_msg )
+
+
+def iteration_coord_handle(channel, msgtype, msg):
+    new_dst = channel.src
+    new_src = channel.dst
+
+    if msg != 10:
+        new_src.send(new_dst, msgtype, msg)
+    else:
+        assert msg == 10
+
+
+def test_iteration():
+
+    echo_net = StarNetwork(1, Host, Host)
+
+    echo_msg = 1
+    echo_type = "iteration"
+
+    echo_net.coord.add_handler(echo_type, iteration_coord_handle)
+    echo_net.nodes[0].add_handler(echo_type, iteration_node_handle)
+
+    echo_net.nodes[0].send(echo_net.coord, echo_type, echo_msg)

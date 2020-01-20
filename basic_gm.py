@@ -3,47 +3,91 @@ import random as rd
 
 
 class BasicCoordinator(Host):
-    def __init__(self, global_state):
-        super()
-        self.global_state = global_state  # initialize coordinator
+    def __init__(self, nid):
+        super().__init__(nid)
+        self.global_state = {}
+
+        def alert_handler(channel, msgtype, msg):
+            new_dst = channel.src
+            new_src = channel.dst
+
+            for key, value in msg.items():
+                if key not in new_src.global_state:
+                    new_src.global_state[key] = msg[key]
+                elif new_src.global_state[key] > (msg[key] + 20):
+                    new_src.global_state -= 20
+
+            new_src.send(new_dst, "new_global", new_src.global_state)
+
+        self.add_handler("alert", alert_handler)
 
 
 class BasicNode(Host):
-    def __init__(self):
-        super()
+    def __init__(self, nid):
+        super().__init__(nid)
         self.local_state = {}
+        self.last_sent = {}
+        self.global_state = {}
+        self.drift = {}
+
+        def new_global_handler(channel, msgtype, msg):
+            new_dst = channel.src
+            new_src = channel.dst
+
+            for key, value in msg.items():
+                if key not in new_src.drift:
+                    new_src.drift[key] = 0
+                new_src.drift[key] = new_src.last_sent[key] - value
+
+            print(self.drift)
+
+        self.add_handler("new_global", new_global_handler)
 
     def update_state(self, new_stream):
-        key, value = new_stream
-        self.local_state[key] += value
+        """
+        Worker node updates state when receives a new stream
+
+        :param new_stream: the stream it received
+        :return: None
+        """
+        for key, value in new_stream.items():
+            if key not in self.local_state:
+                self.local_state[key] = 0
+            self.local_state[key] += value
+
+    def send_alert(self, peer):
+        """
+        Worker node sends its local state to coord
+
+        :param peer: where to send msg
+        :return: None
+        """
+        self.last_sent = self.local_state
+        self.send(peer, "alert", self.local_state)
 
 
-# TODO: create basic functionality when coordinator receives a msg from a node
-def start_round(channel, msg_type, msg):
-    pass
+def stream_generator(keys, length):
+    """
+    Returns a stream of (key,value) pairs
+
+    :param keys: max number of keys
+    :param length: overall length of a stream
+    :return: a dictionary of (k,v) pairs
+    """
+    res = {}
+    for i in range(length):
+        res[rd.randint(1, keys)] = 1
+    return res
 
 
-def start_subround(channel, msg_type, msg):
-    pass
-
-
-# TODO: create basic functionality when node receives a msg from coordinator
-def receive_streams(channel, msg_type, msg):
-    pass
-
-
-# TODO: create a stream generator
-def make_stream():
-    return rd.randint(1, 4), rd.randint(1, 10)
-
-
-# TODO: create a simulation scenario
 if __name__ == "__main__":
-    # initialize network
-    net = StarNetwork(2, node_type=BasicNode, coord_type=BasicCoordinator)
+    net = StarNetwork(k=1, node_type=BasicNode, coord_type=BasicCoordinator)
 
-    # initialize handler func
-    net.coord.add_handler(("string", "coord"), receive_streams)
-    for node in net.nodes:
-        net.node.add_handler(("int", "round"), start_round)
-        net.node.add_handler(("int", "subround"), start_subround)
+    for time in range(10):
+        for i in range(10):
+            stream = stream_generator(5, 1)
+            net.nodes[0].update_state(stream)
+
+        net.nodes[0].send_alert(net.coord)
+
+    dbg = 0  # only for debugging
