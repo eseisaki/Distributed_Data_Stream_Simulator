@@ -13,9 +13,9 @@ class BasicCoordinator(Host):
 
             for key, value in msg.items():
                 if key not in new_src.global_state:
-                    new_src.global_state[key] = msg[key]
-                elif new_src.global_state[key] > (msg[key] + 20):
-                    new_src.global_state -= 20
+                    new_src.global_state[key] = value
+                else:
+                    new_src.global_state[key] /= 2
 
             new_src.send(new_dst, "new_global", new_src.global_state)
 
@@ -27,21 +27,34 @@ class BasicNode(Host):
         super().__init__(nid)
         self.local_state = {}
         self.last_sent = {}
-        self.global_state = {}
+        self.estimate = {}
         self.drift = {}
 
         def new_global_handler(channel, msgtype, msg):
             new_dst = channel.src
             new_src = channel.dst
 
-            for key, value in msg.items():
-                if key not in new_src.drift:
-                    new_src.drift[key] = 0
-                new_src.drift[key] = new_src.last_sent[key] - value
+            self.estimate = msg
+            # initialize drift to zero
+            new_src.drift = {key: 0 for key, value in new_src.drift.items()}
 
-            print(self.drift)
+            print(msg)
 
         self.add_handler("new_global", new_global_handler)
+
+    def update_drift(self):
+        """
+        Worker node updates drift as last_sent - estimate
+
+        :return: None
+        """
+        for key, value in self.local_state.items():
+
+            if key not in self.drift:
+                self.drift[key] = 0
+            if key not in self.last_sent:
+                self.last_sent[key] = 0
+            self.drift[key] = value - self.last_sent[key]
 
     def update_state(self, new_stream):
         """
@@ -62,7 +75,10 @@ class BasicNode(Host):
         :param peer: where to send msg
         :return: None
         """
-        self.last_sent = self.local_state
+
+        for key, value in self.local_state.items():
+            self.last_sent[key] = value
+        # TODO: send drift instead of local_state
         self.send(peer, "alert", self.local_state)
 
 
@@ -81,13 +97,15 @@ def stream_generator(keys, length):
 
 
 if __name__ == "__main__":
-    net = StarNetwork(k=1, node_type=BasicNode, coord_type=BasicCoordinator)
+    net = StarNetwork(k=2, node_type=BasicNode, coord_type=BasicCoordinator)
 
-    for time in range(10):
-        for i in range(10):
-            stream = stream_generator(5, 1)
-            net.nodes[0].update_state(stream)
-
-        net.nodes[0].send_alert(net.coord)
-
-    dbg = 0  # only for debugging
+    # a basic simulation scenario
+    for node in net.nodes:
+        for time in range(2):
+            for i in range(3):
+                stream = stream_generator(1, 1)  # generate stream
+                net.nodes[0].update_state(stream)  # update local state
+                net.nodes[0].update_drift()  # update local drift
+            # nodes send their local drifts every 10 streams
+            net.nodes[0].send_alert(net.coord)
+            dbg = 0  # only for debugging

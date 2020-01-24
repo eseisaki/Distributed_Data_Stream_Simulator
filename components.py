@@ -9,7 +9,7 @@ __docformat__ = 'reStructuredText'
 import sys
 
 # -----------------------------------------------------------------------------
-# TODO: change size_in_bytes to a global function in this module
+
 
 class Channel:
     """Point-to-point or broadcast unidirectional channel.
