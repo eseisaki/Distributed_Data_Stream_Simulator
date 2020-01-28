@@ -33,8 +33,7 @@ class BasicCoordinator(Host):
                 new_src.__global_state[key] /= 2
 
         # wait for all nodes to send their msg
-        # new_src.__check_broadcast(new_src)
-        # and then send msg to each node
+        # and then broadcast msg to each node
         if all(k in new_src.__recv_msgs for k in new_src.send_channels.keys()):
             for peer in new_src.peers:
                 new_src.send(peer, "new_global", new_src.__global_state)
