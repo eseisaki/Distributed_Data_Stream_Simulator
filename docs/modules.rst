@@ -5,4 +5,4 @@ Distributed_Data_Stream_Simulator
    :maxdepth: 4
 
    components
-   msg_types
+   basic
