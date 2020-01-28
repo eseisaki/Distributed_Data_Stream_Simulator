@@ -7,7 +7,7 @@ them in a standardized (and therefore auto-processable) manner."""
 __docformat__ = 'reStructuredText'
 
 import sys
-import asyncio
+
 
 # -----------------------------------------------------------------------------
 
@@ -42,10 +42,7 @@ class Channel:
         self.msg = 0  # no of msg sent
         self.bytes = 0  # no of msg receive
 
-        self.broad_msg = 0
-        self.broad_bytes = 0
-
-    async def send(self, msgtype, msg):
+    def send(self, msgtype, msg):
         """
         src calls this proxy method in order to sent a msg
 
@@ -57,7 +54,7 @@ class Channel:
         self.msg += 1
         self.bytes += sys.getsizeof(msg)
 
-        await self.dst.receive(self, msgtype, msg)  # call remote method to dst
+        self.dst.receive(self, msgtype, msg)  # call remote method to dst
 
 
 # ----------------------------------------------------------------------------
@@ -98,7 +95,7 @@ class Host:
         self.recv_channels[peer] = recv_channel
         self.send_channels[peer] = send_channel
 
-    async def send(self, peer, msgtype, msg):
+    def send(self, peer, msgtype, msg):
         """
         remote method that calls the 'channel.send' proxy method to send a msg
 
@@ -107,9 +104,9 @@ class Host:
         :param msg: the msg to be sent
         :return: None
         """
-        await self.send_channels[peer].send(msgtype, msg)
+        self.send_channels[peer].send(msgtype, msg)
 
-    async def receive(self, channel, msgtype, msg):
+    def receive(self, channel, msgtype, msg):
         """
         a method to receive a msg from the channel
         it is called by the 'channel.send()' proxy method
@@ -119,7 +116,7 @@ class Host:
         :param msg: the msg to be received
         :return: None
         """
-        await self.handlers[msgtype](channel, msgtype, msg)
+        self.handlers[msgtype](channel, msgtype, msg)
 
     def add_handler(self, msgtype, handler_func):
         """
