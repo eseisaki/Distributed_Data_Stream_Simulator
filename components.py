@@ -106,6 +106,10 @@ class Host:
         """
         self.send_channels[peer].send(msgtype, msg)
 
+    def broadcast(self, msgtype, msg):
+        for peer in self.peers:
+            self.send(peer, msgtype, msg)
+
     def receive(self, channel, msgtype, msg):
         """
         a method to receive a msg from the channel
@@ -127,6 +131,20 @@ class Host:
         :return: None
         """
         self.handlers[msgtype] = handler_func
+
+    def get_broad_msg(self):
+        broad_msg = 0
+        for peer in self.peers:
+            broad_msg += self.send_channels[peer].msg
+
+        return broad_msg
+
+    def get_broad_bytes(self):
+        broad_bytes = 0
+        for peer in self.peers:
+            broad_bytes += self.send_channels[peer].bytes
+
+        return broad_bytes
 
 
 # ----------------------------------------------------------------------------

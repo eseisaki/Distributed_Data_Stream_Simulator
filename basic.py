@@ -35,8 +35,9 @@ class BasicCoordinator(Host):
         # wait for all nodes to send their msg
         # and then broadcast msg to each node
         if all(k in new_src.__recv_msgs for k in new_src.send_channels.keys()):
-            for peer in new_src.peers:
-                new_src.send(peer, "new_global", new_src.__global_state)
+            new_src.broadcast("new_global", new_src.__global_state)
+            print("total msgs:", new_src.get_broad_msg())
+            print("total_bytes:", new_src.get_broad_bytes())
 
 
 class BasicNode(Host):
