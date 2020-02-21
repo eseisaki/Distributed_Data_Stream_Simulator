@@ -2,9 +2,9 @@ from components import *
 
 
 @remote_class("coord")
-class Coordinator(Host):
-    def __init__(self, net):
-        super().__init__(net)
+class Coordinator(Sender):
+    def __init__(self, net, nid,  ifc):
+        super().__init__(net, nid, ifc)
 
     def alert(self, arg):
         print(f"This is the {arg!r} method")
@@ -13,22 +13,30 @@ class Coordinator(Host):
         pass
 
 
+@remote_class("site")
 class Site(Sender):
-    def __init__(self, net, ifc):
-        super().__init__(net, ifc)
+    def __init__(self, net, nid, ifc):
+        super().__init__(net, nid, ifc)
+
+    def ack(self):
+        print("Broadcast working")
 
 
 ###############################################################################
 
 if __name__ == "__main__":
-    n = StarNetwork(1, site_type=Site, coord_type=Coordinator)
+    n = StarNetwork(4, site_type=Site, coord_type=Coordinator)
 
     ifc_coord = {"alert": True, "init": True}
     n.add_interface("coord", ifc_coord)
 
-    n.add_coord()
-    n.add_site(3, "coord")
+    ifc_site = {"ack": True}
+    n.add_interface("site", ifc_site)
 
-    n.link(n.hosts[3], n.coord)
-    n.hosts[3].send("alert", "help me")
+    n.add_coord("site")
+    n.add_sites(n.k, "coord")
+    n.setup_connections()
+
+    n.coord.send("ack", None)
+
     dbg = None

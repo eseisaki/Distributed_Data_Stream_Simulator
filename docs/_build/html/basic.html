@@ -154,78 +154,15 @@
             
   <div class="section" id="module-basic">
 <span id="basic-module"></span><h1>basic module<a class="headerlink" href="#module-basic" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="basic.BasicCoordinator">
-<em class="property">class </em><code class="sig-prename descclassname">basic.</code><code class="sig-name descname">BasicCoordinator</code><span class="sig-paren">(</span><em class="sig-param">nid</em><span class="sig-paren">)</span><a class="headerlink" href="#basic.BasicCoordinator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="components.html#components.Host" title="components.Host"><code class="xref py py-class docutils literal notranslate"><span class="pre">components.Host</span></code></a></p>
-</dd></dl>
-
-<dl class="class">
-<dt id="basic.BasicNode">
-<em class="property">class </em><code class="sig-prename descclassname">basic.</code><code class="sig-name descname">BasicNode</code><span class="sig-paren">(</span><em class="sig-param">nid</em><span class="sig-paren">)</span><a class="headerlink" href="#basic.BasicNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="components.html#components.Host" title="components.Host"><code class="xref py py-class docutils literal notranslate"><span class="pre">components.Host</span></code></a></p>
-<dl class="method">
-<dt id="basic.BasicNode.send_alert">
-<code class="sig-name descname">send_alert</code><span class="sig-paren">(</span><em class="sig-param">peer</em><span class="sig-paren">)</span><a class="headerlink" href="#basic.BasicNode.send_alert" title="Permalink to this definition">¶</a></dt>
-<dd><p>Worker node sends its local state to coord</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>peer</strong> – where to send msg</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="basic.BasicNode.update_drift">
-<code class="sig-name descname">update_drift</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#basic.BasicNode.update_drift" title="Permalink to this definition">¶</a></dt>
-<dd><p>Worker node updates drift as last_state - estimate</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="basic.BasicNode.update_state">
-<code class="sig-name descname">update_state</code><span class="sig-paren">(</span><em class="sig-param">new_stream</em><span class="sig-paren">)</span><a class="headerlink" href="#basic.BasicNode.update_state" title="Permalink to this definition">¶</a></dt>
-<dd><p>Worker node updates state when receives a new stream</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>new_stream</strong> – the stream it received</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="function">
-<dt id="basic.simulation">
-<code class="sig-prename descclassname">basic.</code><code class="sig-name descname">simulation</code><span class="sig-paren">(</span><em class="sig-param">node_a</em>, <em class="sig-param">coord</em><span class="sig-paren">)</span><a class="headerlink" href="#basic.simulation" title="Permalink to this definition">¶</a></dt>
+<dt id="basic.Coordinator">
+<code class="sig-prename descclassname">basic.</code><code class="sig-name descname">Coordinator</code><span class="sig-paren">(</span><em class="sig-param">net</em>, <em class="sig-param">nid</em>, <em class="sig-param">ifc</em><span class="sig-paren">)</span><a class="headerlink" href="#basic.Coordinator" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
-<dt id="basic.stream_generator">
-<code class="sig-prename descclassname">basic.</code><code class="sig-name descname">stream_generator</code><span class="sig-paren">(</span><em class="sig-param">keys</em>, <em class="sig-param">length</em><span class="sig-paren">)</span><a class="headerlink" href="#basic.stream_generator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a stream of (key,value) pairs</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>keys</strong> – max number of keys</p></li>
-<li><p><strong>length</strong> – overall length of a stream</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>a dictionary of (k,v) pairs</p>
-</dd>
-</dl>
-</dd></dl>
+<dt id="basic.Site">
+<code class="sig-prename descclassname">basic.</code><code class="sig-name descname">Site</code><span class="sig-paren">(</span><em class="sig-param">net</em>, <em class="sig-param">nid</em>, <em class="sig-param">ifc</em><span class="sig-paren">)</span><a class="headerlink" href="#basic.Site" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </div>
 

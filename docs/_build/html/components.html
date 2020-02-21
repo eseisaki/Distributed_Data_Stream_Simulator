@@ -155,36 +155,98 @@
             
   <div class="section" id="module-components">
 <span id="components-module"></span><h1>components module<a class="headerlink" href="#module-components" title="Permalink to this headline">¶</a></h1>
-<p>Distributed stream system architecture simulation classes.</p>
-<p>The purpose of these classes is to collect detailed statistics
-that are independent of the particular algorithm, and report
-them in a standardized (and therefore auto-processable) manner.</p>
+<p>The purpose of these classes is to collect detailed statistics that are
+independent of the particular algorithm, and report them in a standardized
+manner.</p>
 <dl class="class">
 <dt id="components.Channel">
 <em class="property">class </em><code class="sig-prename descclassname">components.</code><code class="sig-name descname">Channel</code><span class="sig-paren">(</span><em class="sig-param">src</em>, <em class="sig-param">dst</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Channel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Point-to-point or broadcast unidirectional channel.</p>
-<p>Channels are used to collect network statistics. Each channel counts
-the number of messages and the total message size (in bytes).</p>
+<p>Point to point unidirectional Channel</p>
+<p>Channels are used to collect network statistics. Each channel count the
+number of messages and the total message size (in bytes). A channel is
+defined by the source host, the destination host and the endpoint in
+which is included.</p>
+<dl class="method">
+<dt id="components.Channel.transmit">
+<code class="sig-name descname">transmit</code><span class="sig-paren">(</span><em class="sig-param">msg_size</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Channel.transmit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds transmitted msg and its bytes to the channel metrics</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>src</strong> (<em>host</em>) – the one that sends the msg</p></li>
-<li><p><strong>dst</strong> (<em>host</em>) – the one that receives the msg</p></li>
-<li><p><strong>msg</strong> (<em>int</em>) – number of msgs sent by this channel</p></li>
-<li><p><strong>bytes</strong> (<em>int</em>) – bytes sent by this channel</p></li>
-</ul>
+<dd class="field-odd"><p><strong>msg_size</strong> – the size of transmitted message</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="components.Endpoint">
+<em class="property">class </em><code class="sig-prename descclassname">components.</code><code class="sig-name descname">Endpoint</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">req_channel</em>, <em class="sig-param">resp_channel=None</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Endpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents an rpc endpoint</p>
+<p>Each rpc endpoint(method) is associated with a request channel, and—if
+it is not one way—with a response channel.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="components.Host">
+<em class="property">class </em><code class="sig-prename descclassname">components.</code><code class="sig-name descname">Host</code><span class="sig-paren">(</span><em class="sig-param">net</em>, <em class="sig-param">nid</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Hosts are used as nodes in the network.</p>
+<p>Hosts can be named, for more friendly output. A host
+can represent a single network destination (site), or a set
+of network destinations.</p>
+<p>Any subclass of host is a single site. For broadcast sites,
+one has to use <cite>host_group</cite>.</p>
+<p>&#64;see host_group</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="components.HostGroup">
+<em class="property">class </em><code class="sig-prename descclassname">components.</code><code class="sig-name descname">HostGroup</code><a class="headerlink" href="#components.HostGroup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A host group represents a broadcast address.</p>
+<p>This is simply an abstract base class. The implementation
+of this class can be anything. All that this class interface
+provides is the methods that are required by the
+communication traffic computation.</p>
 <dl class="method">
-<dt id="components.Channel.send">
-<code class="sig-name descname">send</code><span class="sig-paren">(</span><em class="sig-param">msgtype</em>, <em class="sig-param">msg</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Channel.send" title="Permalink to this definition">¶</a></dt>
-<dd><p>src calls this proxy method in order to sent a msg</p>
+<dt id="components.HostGroup.join">
+<code class="sig-name descname">join</code><span class="sig-paren">(</span><em class="sig-param">h</em><span class="sig-paren">)</span><a class="headerlink" href="#components.HostGroup.join" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a host in the specific host group</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>h</strong> – the host that will join the host group</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>NOne</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="components.Interface">
+<em class="property">class </em><code class="sig-prename descclassname">components.</code><code class="sig-name descname">Interface</code><span class="sig-paren">(</span><em class="sig-param">name</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents an interface in an rpc protocol.</p>
+<p>An interface is like a ‘remote type’. It represents
+a collection of remote functions that are implemented on
+a remote host.</p>
+<dl class="method">
+<dt id="components.Interface.add_method">
+<code class="sig-name descname">add_method</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">one_way</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Interface.add_method" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new method name in the interface and if it is one way  or not.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>msgtype</strong> (<em>string</em>) – types of msgs i.e. “alert”</p></li>
-<li><p><strong>msg</strong> – the msg to sent</p></li>
+<li><p><strong>name</strong> – the name of the method</p></li>
+<li><p><strong>one_way</strong> – if true there is no response message</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -196,21 +258,66 @@ the number of messages and the total message size (in bytes).</p>
 </dd></dl>
 
 <dl class="class">
-<dt id="components.Host">
-<em class="property">class </em><code class="sig-prename descclassname">components.</code><code class="sig-name descname">Host</code><span class="sig-paren">(</span><em class="sig-param">nid</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Host" title="Permalink to this definition">¶</a></dt>
+<dt id="components.MulticastChannel">
+<em class="property">class </em><code class="sig-prename descclassname">components.</code><code class="sig-name descname">MulticastChannel</code><span class="sig-paren">(</span><em class="sig-param">src</em>, <em class="sig-param">dst: components.HostGroup</em><span class="sig-paren">)</span><a class="headerlink" href="#components.MulticastChannel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#components.Channel" title="components.Channel"><code class="xref py py-class docutils literal notranslate"><span class="pre">components.Channel</span></code></a></p>
+<p>Broadcast unidirectional Channel</p>
+<p>A channel can be a multicast channel. This is always associated with
+some one-way rpc method, sending data from a single source host A to a
+destination host group B. Again, there are two channels associated with
+A and B. One channel counts the traffic sent by A, and the second
+channel counts the traffic received by all the hosts in host group B.
+For example, if there are 3 hosts in group B, and a message of 100 bytes
+is sent, one channel will register one additional message and 100
+additional bytes, and the other will register 3 additional messages and
+300 additional bytes.</p>
+<dl class="method">
+<dt id="components.MulticastChannel.transmit">
+<code class="sig-name descname">transmit</code><span class="sig-paren">(</span><em class="sig-param">msg_size</em><span class="sig-paren">)</span><a class="headerlink" href="#components.MulticastChannel.transmit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Same as Channel.transmit but also calculates the messages that sites
+received from broadcast.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>msg_size</strong> – the size of transmitted message</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="components.Network">
+<em class="property">class </em><code class="sig-prename descclassname">components.</code><code class="sig-name descname">Network</code><a class="headerlink" href="#components.Network" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Hosts are used as nodes in the network.</p>
-<dl class="field-list simple">
-</dl>
+<p>A collection of hosts and channels.</p>
+<p>This class manages the network elements: hosts, groups,
+channels, rpc endpoints.</p>
 <dl class="method">
-<dt id="components.Host.add_handler">
-<code class="sig-name descname">add_handler</code><span class="sig-paren">(</span><em class="sig-param">msgtype</em>, <em class="sig-param">handler_func</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Host.add_handler" title="Permalink to this definition">¶</a></dt>
-<dd><p>add in the handlers list a user_given function to implement on the host</p>
+<dt id="components.Network.add_group">
+<code class="sig-name descname">add_group</code><span class="sig-paren">(</span><em class="sig-param">g</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Network.add_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a host group in the network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>g</strong> – the HostGroup to be added</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="components.Network.add_host">
+<code class="sig-name descname">add_host</code><span class="sig-paren">(</span><em class="sig-param">nid</em>, <em class="sig-param">h</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Network.add_host" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a single host in the network</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>msgtype</strong> – type of msg</p></li>
-<li><p><strong>handler_func</strong> – the given function</p></li>
+<li><p><strong>nid</strong> – the id of the host</p></li>
+<li><p><strong>h</strong> – the Host to be added</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -220,15 +327,16 @@ the number of messages and the total message size (in bytes).</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="components.Host.connect">
-<code class="sig-name descname">connect</code><span class="sig-paren">(</span><em class="sig-param">peer</em>, <em class="sig-param">recv_channel</em>, <em class="sig-param">send_channel</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Host.connect" title="Permalink to this definition">¶</a></dt>
-<dd><p>creates a connection between the caller and its peer</p>
+<dt id="components.Network.add_interface">
+<code class="sig-name descname">add_interface</code><span class="sig-paren">(</span><em class="sig-param">ifc</em>, <em class="sig-param">methods</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Network.add_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an interface to the protocol.</p>
+<p>The collection of method should be like:
+{“method1”: True, “method2”: False}</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>peer</strong> – host to connect with</p></li>
-<li><p><strong>recv_channel</strong> – channel to receive msgs from peer</p></li>
-<li><p><strong>send_channel</strong> – channel to send msgs from peer</p></li>
+<li><p><strong>ifc</strong> – the name of the interface</p></li>
+<li><p><strong>methods</strong> – the collection of method names</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -238,16 +346,15 @@ the number of messages and the total message size (in bytes).</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="components.Host.receive">
-<code class="sig-name descname">receive</code><span class="sig-paren">(</span><em class="sig-param">channel</em>, <em class="sig-param">msgtype</em>, <em class="sig-param">msg</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Host.receive" title="Permalink to this definition">¶</a></dt>
-<dd><p>a method to receive a msg from the channel
-it is called by the ‘channel.send()’ proxy method</p>
+<dt id="components.Network.add_method">
+<code class="sig-name descname">add_method</code><span class="sig-paren">(</span><em class="sig-param">ifc</em>, <em class="sig-param">m_name</em>, <em class="sig-param">one_way</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Network.add_method" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a method into a specific interface.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>channel</strong> – channel to receive the msg from</p></li>
-<li><p><strong>msgtype</strong> – type of the msg</p></li>
-<li><p><strong>msg</strong> – the msg to be received</p></li>
+<li><p><strong>ifc</strong> – the name of the interface</p></li>
+<li><p><strong>m_name</strong> – the name of the method</p></li>
+<li><p><strong>one_way</strong> – True if the method is one way</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -257,15 +364,126 @@ it is called by the ‘channel.send()’ proxy method</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="components.Host.send">
-<code class="sig-name descname">send</code><span class="sig-paren">(</span><em class="sig-param">peer</em>, <em class="sig-param">msgtype</em>, <em class="sig-param">msg</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Host.send" title="Permalink to this definition">¶</a></dt>
-<dd><p>remote method that calls the ‘channel.send’ proxy method to send a msg</p>
+<dt id="components.Network.link">
+<em class="property">static </em><code class="sig-name descname">link</code><span class="sig-paren">(</span><em class="sig-param">src</em>, <em class="sig-param">dst</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Network.link" title="Permalink to this definition">¶</a></dt>
+<dd><p>Links two hosts or a host with a host group.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>peer</strong> – host to send msg</p></li>
-<li><p><strong>msgtype</strong> – type of the msg</p></li>
-<li><p><strong>msg</strong> – the msg to be sent</p></li>
+<li><p><strong>src</strong> – the source host</p></li>
+<li><p><strong>dst</strong> – the destination host</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="components.Protocol">
+<em class="property">class </em><code class="sig-prename descclassname">components.</code><code class="sig-name descname">Protocol</code><a class="headerlink" href="#components.Protocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A collection of rpc interfaces.</p>
+<p>A protocol is the collection of RPC interfaces used in a network.</p>
+<dl class="method">
+<dt id="components.Protocol.add_interface">
+<code class="sig-name descname">add_interface</code><span class="sig-paren">(</span><em class="sig-param">ifc</em>, <em class="sig-param">methods</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Protocol.add_interface" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a collection of methods in a specific interface</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ifc</strong> – the name of the interface</p></li>
+<li><p><strong>methods</strong> – the collection of methods</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="components.Protocol.add_method">
+<code class="sig-name descname">add_method</code><span class="sig-paren">(</span><em class="sig-param">ifc</em>, <em class="sig-param">name</em>, <em class="sig-param">one_way</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Protocol.add_method" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a method in a specific interface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ifc</strong> – the name of the interface</p></li>
+<li><p><strong>name</strong> – the name of the method</p></li>
+<li><p><strong>one_way</strong> – if true there is no response message</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="components.Proxy">
+<em class="property">class </em><code class="sig-prename descclassname">components.</code><code class="sig-name descname">Proxy</code><span class="sig-paren">(</span><em class="sig-param">ifc</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Proxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>An rpc proxy represents a proxy object for some host.</p>
+<p>When host A wants to call a remote method on host B,
+it makes the call through an rpc proxy method, so that
+the network traffic can be accounted for. Host A is the
+owner of the proxy and host B is the proxied host.
+Each proxy is associated with an rpc interface, which
+represents the collection of remote calls (rpc functions)
+being proxied. In middleware terms, the proxy instantiates
+the interface.</p>
+<dl class="method">
+<dt id="components.Proxy.create_endpoints">
+<code class="sig-name descname">create_endpoints</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#components.Proxy.create_endpoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the proxy’s endpoints.</p>
+<p>If the owner has a proxied host group send will be a collection of
+remote methods.Also in this case there will be a broadcast so there
+are not constructed response channels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="components.Sender">
+<em class="property">class </em><code class="sig-prename descclassname">components.</code><code class="sig-name descname">Sender</code><span class="sig-paren">(</span><em class="sig-param">net</em>, <em class="sig-param">nid</em>, <em class="sig-param">ifc</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Sender" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#components.Host" title="components.Host"><code class="xref py py-class docutils literal notranslate"><span class="pre">components.Host</span></code></a></p>
+<p>Base class for implementing proxies</p>
+<p>To define a proxy on a class, user should define this class as a
+subclass of Sender class.</p>
+<dl class="method">
+<dt id="components.Sender.connect_proxy">
+<code class="sig-name descname">connect_proxy</code><span class="sig-paren">(</span><em class="sig-param">proxied</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Sender.connect_proxy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connects the proxy given a destination</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>proxied</strong> – the host to be proxied</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="components.Sender.send">
+<code class="sig-name descname">send</code><span class="sig-paren">(</span><em class="sig-param">method: str</em>, <em class="sig-param">msg</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Sender.send" title="Permalink to this definition">¶</a></dt>
+<dd><p>A method which is called from the user when a host sends a msg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>method</strong> – the remote method name the  will be called</p></li>
+<li><p><strong>msg</strong> – the message that will be sent</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -278,25 +496,35 @@ it is called by the ‘channel.send()’ proxy method</p>
 
 <dl class="class">
 <dt id="components.StarNetwork">
-<em class="property">class </em><code class="sig-prename descclassname">components.</code><code class="sig-name descname">StarNetwork</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">node_type</em>, <em class="sig-param">coord_type</em>, <em class="sig-param">channel_type=&lt;class 'components.Channel'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#components.StarNetwork" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<blockquote>
-<div><p>A star network  contains nodes, a coordinator and  their connections.</p>
-</div></blockquote>
+<em class="property">class </em><code class="sig-prename descclassname">components.</code><code class="sig-name descname">StarNetwork</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">site_type=&lt;class 'components.Sender'&gt;</em>, <em class="sig-param">coord_type=&lt;class 'components.Sender'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#components.StarNetwork" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#components.Network" title="components.Network"><code class="xref py py-class docutils literal notranslate"><span class="pre">components.Network</span></code></a></p>
+<p>Represents a basic star network</p>
+<p>Creates a network with k sites and one coordinator and also does the
+connections.Each site can send message to coordinator and
+coordinator only broadcasts messages to its sites.</p>
+<dl class="method">
+<dt id="components.StarNetwork.add_coord">
+<code class="sig-name descname">add_coord</code><span class="sig-paren">(</span><em class="sig-param">ifc</em><span class="sig-paren">)</span><a class="headerlink" href="#components.StarNetwork.add_coord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a coordinator to the network.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>k</strong> (<em>int</em>) – the number of nodes in the network</p>
+<dd class="field-odd"><p><strong>ifc</strong> – the name of the interface</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
+</dd></dl>
+
 <dl class="method">
-<dt id="components.StarNetwork.link">
-<code class="sig-name descname">link</code><span class="sig-paren">(</span><em class="sig-param">node</em>, <em class="sig-param">coord</em><span class="sig-paren">)</span><a class="headerlink" href="#components.StarNetwork.link" title="Permalink to this definition">¶</a></dt>
-<dd><p>creates bidirectional connection between a node and the coordinator</p>
+<dt id="components.StarNetwork.add_sites">
+<code class="sig-name descname">add_sites</code><span class="sig-paren">(</span><em class="sig-param">k</em>, <em class="sig-param">ifc</em><span class="sig-paren">)</span><a class="headerlink" href="#components.StarNetwork.add_sites" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds k sites to the network.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>node</strong> – the node to connect with the coordinator</p></li>
-<li><p><strong>coord</strong> – the coordinator of the network</p></li>
+<li><p><strong>k</strong> – the number of sites</p></li>
+<li><p><strong>ifc</strong> – the interface the sites’s proxies are associated with</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -305,6 +533,31 @@ it is called by the ‘channel.send()’ proxy method</p>
 </dl>
 </dd></dl>
 
+<dl class="method">
+<dt id="components.StarNetwork.setup_connections">
+<code class="sig-name descname">setup_connections</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#components.StarNetwork.setup_connections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set up all the connections between the sites and the coordinator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="components.remote_class">
+<code class="sig-prename descclassname">components.</code><code class="sig-name descname">remote_class</code><span class="sig-paren">(</span><em class="sig-param">ifc</em><span class="sig-paren">)</span><a class="headerlink" href="#components.remote_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>A decorator for hosts who are supposed to have remote methods</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ifc</strong> – the name of the interface the class’s remote methods belong to</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
