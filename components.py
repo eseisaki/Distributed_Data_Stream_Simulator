@@ -4,40 +4,7 @@ independent of the particular algorithm, and report them in a standardized
 manner.
 
 """
-
-import functools
-
-
-###############################################################################
-#
-# Decorators
-#
-###############################################################################
-def remote_class(ifc):
-    """
-    A decorator for hosts who are supposed to have remote methods
-
-    :param ifc: the name of the interface the class's remote methods belong to
-    :return: None
-    """
-
-    def decorator_remote(cls):
-        @functools.wraps(cls)
-        def wrapper_decorator(*args, **kwargs):
-            instance = cls(*args, **kwargs)
-            if ifc in instance.net.protocol.interfaces:
-                interface = instance.net.protocol.interfaces[ifc]
-                for name in interface.methods.keys():
-                    obj = getattr(instance, str(name), None)
-                    if not callable(obj):
-                        raise TypeError(f"The {str(name)!r} function must be "
-                                        f"implemented")
-            return instance
-
-        return wrapper_decorator
-
-    return decorator_remote
-
+from tools import *
 
 ###############################################################################
 #
@@ -60,7 +27,7 @@ class Host:
 
     """
 
-    def __init__(self, net, nid, ):
+    def __init__(self, net, nid):
         """
         A basic constructor.
 
@@ -69,7 +36,6 @@ class Host:
         """
         self.nid = nid
         self.net = net
-        # self.incoming_channels = {}
 
 
 class HostGroup:
@@ -84,6 +50,7 @@ class HostGroup:
 
     def __init__(self):
         self.members = {}
+        self.channel = None
 
     def join(self, h):
         """
@@ -110,7 +77,7 @@ class Channel:
     which is included.
     """
 
-    def __init__(self, src, dst):
+    def __init__(self, src, dst, endpoint):
         """
         A basic constructor.
 
@@ -119,20 +86,20 @@ class Channel:
         """
         self.src = src
         self.dst = dst
+        self.endpoint = endpoint
 
         self.msgs = 0
         self.bytes = 0
 
-    # TODO: Remake when msg_size is implemented
-    def transmit(self, msg_size):
+    def transmit(self, msg):
         """
         Adds transmitted msg and its bytes to the channel metrics
 
-        :param msg_size:  the size of transmitted message
+        :param msg:  the transmitted message
         :return: None
         """
         self.msgs += 1
-        self.bytes += msg_size
+        self.bytes += msg_size(msg)
 
 
 class MulticastChannel(Channel):
@@ -150,31 +117,31 @@ class MulticastChannel(Channel):
     300 additional bytes.
     """
 
-    def __init__(self, src, dst: HostGroup):
+    def __init__(self, src, dst: HostGroup, endpoint):
         """
          A basic constructor.
 
         :param src: the source host
         :param dst: the destination host
         """
-        super().__init__(src, dst)
+        super().__init__(src, dst, endpoint)
         self.rx_msgs = 0
         self.rx_bytes = 0
 
-    def transmit(self, msg_size):
+    def transmit(self, msg):
         """
         Same as Channel.transmit but also calculates the messages that sites
         received from broadcast.
 
-        :param msg_size: the size of transmitted message
+        :param msg: the transmitted message
         :return: None
         """
         self.msgs += 1
-        self.bytes += msg_size
+        self.bytes += msg_size(msg)
 
-        group_size = 0
+        group_size = len(self.dst.members)
         self.rx_msgs += group_size
-        self.rx_bytes += group_size * msg_size
+        self.rx_bytes += group_size * msg_size(msg)
 
 
 ###############################################################################
@@ -256,7 +223,7 @@ class Endpoint:
     it is not one way---with a response channel.
     """
 
-    def __init__(self, func, req_channel, resp_channel=None):
+    def __init__(self, name, func, req_channel, resp_channel=None):
         """
         A basic constructor.
 
@@ -264,6 +231,7 @@ class Endpoint:
         :param req_channel:  the request channel
         :param resp_channel:  the response channel
         """
+        self.name = name
         self.send = func
         self.req_channel = req_channel
         self.resp_channel = resp_channel
@@ -309,25 +277,39 @@ class Proxy:
         ifc_obj = self.owner.net.protocol.interfaces[self.ifc]
 
         for name, one_way in ifc_obj.methods.items():
+            # if proxied is a host group create a multichannel
             if self.proxied in self.owner.net.groups:
+
                 send = []
                 for member in self.proxied.members:
                     func = getattr(member, name)
+                    # here send is a collection of remote methods
                     send.append(func)
 
-                req_channel = Channel(self.owner, self.proxied)
+                req_channel = MulticastChannel(self.owner, self.proxied, name)
+
+                # broadcast is always one way channel
                 if not one_way:
                     raise AttributeError("Broadcast must always be one way.")
-                self.endpoints[name] = Endpoint(send, req_channel)
+
+                self.owner.net.channels.append(req_channel)
+                self.endpoints[name] = Endpoint(name, send, req_channel)
+            # here proxied is a single host
             else:
                 send = (getattr(self.proxied, name))
 
-                req_channel = Channel(self.owner, self.proxied)
-                if not one_way:
-                    self.endpoints[name] = Endpoint(send, req_channel)
+                req_channel = Channel(self.owner, self.proxied, name)
+
+                if one_way:
+                    self.owner.net.channels.append(req_channel)
+                    self.endpoints[name] = Endpoint(name, send, req_channel)
                 else:
-                    resp_channel = Channel(self.proxied, self.owner)
-                    self.endpoints[name] = Endpoint(send, req_channel,
+                    # create a response channel
+                    resp_channel = Channel(self.proxied, self.owner, name)
+
+                    self.owner.net.channels.append(req_channel)
+                    self.owner.net.channels.append(resp_channel)
+                    self.endpoints[name] = Endpoint(name, send, req_channel,
                                                     resp_channel)
 
 
@@ -385,6 +367,7 @@ class Sender(Host):
         else:
             try:
                 self.proxy.endpoints[method].send(msg)
+                self.proxy.endpoints[method].req_channel.transmit(msg)
             except KeyError:
                 raise TypeError(f"There is no {method!r} remote method")
 
@@ -407,6 +390,7 @@ class Network:
         self.protocol = Protocol()
         self.hosts = {}
         self.groups = []
+        self.channels = []
 
     def add_interface(self, ifc, methods):
         """
@@ -526,3 +510,6 @@ class StarNetwork(Network):
         for site in self.sites.values():
             self.link(site, self.coord)
         self.link(self.coord, self.groups[0])
+
+
+

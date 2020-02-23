@@ -1,9 +1,11 @@
 from components import *
+from tools import *
+from statistics import *
 
 
 @remote_class("coord")
 class Coordinator(Sender):
-    def __init__(self, net, nid,  ifc):
+    def __init__(self, net, nid, ifc):
         super().__init__(net, nid, ifc)
 
     def alert(self, arg):
@@ -37,6 +39,9 @@ if __name__ == "__main__":
     n.add_sites(n.k, "coord")
     n.setup_connections()
 
+    n.sites[0].send("alert", "trial")
     n.coord.send("ack", None)
 
+    print(total_bytes(n))
+    print(src_msgs(n, 0))
     dbg = None
