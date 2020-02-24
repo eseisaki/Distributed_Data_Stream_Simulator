@@ -153,14 +153,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-components">
-<span id="components-module"></span><h1>components module<a class="headerlink" href="#module-components" title="Permalink to this headline">¶</a></h1>
-<p>The purpose of these classes is to collect detailed statistics that are
+  <div class="section" id="components-module">
+<h1>components module<a class="headerlink" href="#components-module" title="Permalink to this headline">¶</a></h1>
+<img alt="_images/diagram.png" src="_images/diagram.png" />
+<span class="target" id="module-components"></span><p>The purpose of these classes is to collect detailed statistics that are
 independent of the particular algorithm, and report them in a standardized
 manner.</p>
 <dl class="class">
 <dt id="components.Channel">
-<em class="property">class </em><code class="sig-prename descclassname">components.</code><code class="sig-name descname">Channel</code><span class="sig-paren">(</span><em class="sig-param">src</em>, <em class="sig-param">dst</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Channel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">components.</code><code class="sig-name descname">Channel</code><span class="sig-paren">(</span><em class="sig-param">src</em>, <em class="sig-param">dst</em>, <em class="sig-param">endpoint</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Channel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Point to point unidirectional Channel</p>
 <p>Channels are used to collect network statistics. Each channel count the
@@ -169,11 +170,11 @@ defined by the source host, the destination host and the endpoint in
 which is included.</p>
 <dl class="method">
 <dt id="components.Channel.transmit">
-<code class="sig-name descname">transmit</code><span class="sig-paren">(</span><em class="sig-param">msg_size</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Channel.transmit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transmit</code><span class="sig-paren">(</span><em class="sig-param">msg</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Channel.transmit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds transmitted msg and its bytes to the channel metrics</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>msg_size</strong> – the size of transmitted message</p>
+<dd class="field-odd"><p><strong>msg</strong> – the transmitted message</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
@@ -185,7 +186,7 @@ which is included.</p>
 
 <dl class="class">
 <dt id="components.Endpoint">
-<em class="property">class </em><code class="sig-prename descclassname">components.</code><code class="sig-name descname">Endpoint</code><span class="sig-paren">(</span><em class="sig-param">func</em>, <em class="sig-param">req_channel</em>, <em class="sig-param">resp_channel=None</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Endpoint" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">components.</code><code class="sig-name descname">Endpoint</code><span class="sig-paren">(</span><em class="sig-param">name</em>, <em class="sig-param">func</em>, <em class="sig-param">req_channel</em>, <em class="sig-param">resp_channel=None</em><span class="sig-paren">)</span><a class="headerlink" href="#components.Endpoint" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Represents an rpc endpoint</p>
 <p>Each rpc endpoint(method) is associated with a request channel, and—if
@@ -259,7 +260,7 @@ a remote host.</p>
 
 <dl class="class">
 <dt id="components.MulticastChannel">
-<em class="property">class </em><code class="sig-prename descclassname">components.</code><code class="sig-name descname">MulticastChannel</code><span class="sig-paren">(</span><em class="sig-param">src</em>, <em class="sig-param">dst: components.HostGroup</em><span class="sig-paren">)</span><a class="headerlink" href="#components.MulticastChannel" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">components.</code><code class="sig-name descname">MulticastChannel</code><span class="sig-paren">(</span><em class="sig-param">src</em>, <em class="sig-param">dst: components.HostGroup</em>, <em class="sig-param">endpoint</em><span class="sig-paren">)</span><a class="headerlink" href="#components.MulticastChannel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#components.Channel" title="components.Channel"><code class="xref py py-class docutils literal notranslate"><span class="pre">components.Channel</span></code></a></p>
 <p>Broadcast unidirectional Channel</p>
 <p>A channel can be a multicast channel. This is always associated with
@@ -273,12 +274,12 @@ additional bytes, and the other will register 3 additional messages and
 300 additional bytes.</p>
 <dl class="method">
 <dt id="components.MulticastChannel.transmit">
-<code class="sig-name descname">transmit</code><span class="sig-paren">(</span><em class="sig-param">msg_size</em><span class="sig-paren">)</span><a class="headerlink" href="#components.MulticastChannel.transmit" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">transmit</code><span class="sig-paren">(</span><em class="sig-param">msg</em><span class="sig-paren">)</span><a class="headerlink" href="#components.MulticastChannel.transmit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Same as Channel.transmit but also calculates the messages that sites
 received from broadcast.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>msg_size</strong> – the size of transmitted message</p>
+<dd class="field-odd"><p><strong>msg</strong> – the transmitted message</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>None</p>
@@ -544,20 +545,6 @@ coordinator only broadcasts messages to its sites.</p>
 </dl>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="function">
-<dt id="components.remote_class">
-<code class="sig-prename descclassname">components.</code><code class="sig-name descname">remote_class</code><span class="sig-paren">(</span><em class="sig-param">ifc</em><span class="sig-paren">)</span><a class="headerlink" href="#components.remote_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>A decorator for hosts who are supposed to have remote methods</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ifc</strong> – the name of the interface the class’s remote methods belong to</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
 </dd></dl>
 
 </div>

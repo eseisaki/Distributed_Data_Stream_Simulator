@@ -51,4 +51,6 @@ To create documentation just run:
     
 Then open the *index.html* with a browser. 
 
+    sphinx-apidoc -o ..
+
 

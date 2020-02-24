@@ -6,6 +6,7 @@ manner.
 """
 from tools import *
 
+
 ###############################################################################
 #
 # Hosts
@@ -198,6 +199,8 @@ class Protocol:
         :param methods: the collection of methods
         :return: None
         """
+        if len(methods) == 0:
+            raise TypeError("Empty interface is not accepted")
         for key, value in methods.items():
             self.add_method(ifc, key, value)
 
@@ -361,7 +364,7 @@ class Sender(Host):
         if self.proxy.proxied in self.net.groups:
             try:
                 for send in self.proxy.endpoints[method].send:
-                    send()
+                    send(msg)
             except KeyError:
                 raise TypeError(f"There is no {method!r} remote method")
         else:
@@ -510,6 +513,3 @@ class StarNetwork(Network):
         for site in self.sites.values():
             self.link(site, self.coord)
         self.link(self.coord, self.groups[0])
-
-
-
