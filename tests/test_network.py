@@ -1,4 +1,5 @@
 from components import *
+from statistics import *
 
 
 class EchoSim:
@@ -13,25 +14,43 @@ class EchoSim:
         class Coordinator(Sender):
             def __init__(self, net, nid, ifc):
                 super().__init__(net, nid, ifc)
+                self.store = 0
 
-            def method(self, arg):
+            def echo(self, arg):
                 assert arg == "a msg"
+
+            def answer(self, msg):
+                self.incoming_channels += 1
+                self.store += msg
+
+                if self.incoming_channels == k:
+                    self.incoming_channels = 0
+                    self.send("call", self.store)
+
+                if self.incoming_channels > k:
+                    raise KeyError("There are not so many sites as sends")
 
         @remote_class("site")
         class Site(Sender):
             def __init__(self, net, nid, ifc):
                 super().__init__(net, nid, ifc)
 
-            def method2(self, arg):
+            def echo(self, arg):
                 assert arg == "a coord msg"
+
+            def call(self, msg):
+                if msg < 50:
+                    self.send("answer", 1)
+                else:
+                    print(msg)
+                    assert msg >= 50
 
         self.n = StarNetwork(k, coord_type=Coordinator, site_type=Site)
 
-        interface1 = {"method": True}
-        interface2 = {"method2": True}
-
-        self.n.add_interface("coord", interface1)
-        self.n.add_interface("site", interface2)
+        ifc_coord = {"echo": True, "answer": True}
+        self.n.add_interface("coord", ifc_coord)
+        ifc_site = {"echo": True, "call": True}
+        self.n.add_interface("site", ifc_site)
 
         self.n.add_sites(k, "coord")
         self.n.add_coord("site")
@@ -42,7 +61,7 @@ class EchoSim:
 ###############################################################################
 def test_create_protocol():
     n = Network()
-    interface = {"method1": True, "method2": False}
+    interface = {"echo": True, "echo": False}
 
     n.add_interface("trial", interface)
 
@@ -50,9 +69,10 @@ def test_create_protocol():
 
 
 ###############################################################################
-def test_create_nodes(k=4):
+def test_create_nodes():
+    k = 10
     n = StarNetwork(k)
-    interface = {"method": True}
+    interface = {"echo": True}
 
     n.add_interface("trial", interface)
     n.add_sites(k, "trial")
@@ -61,56 +81,33 @@ def test_create_nodes(k=4):
 
 
 ###############################################################################
-def test_create_network(k=4):
+def test_create_network():
+    k = 10
     sim = EchoSim(k)
-    assert len(sim.n.channels) == k + 1
+    assert len(sim.n.channels) == 2*(k + 1)
 
 
 ###############################################################################
-def test_send_oneway(k=4):
+def test_send_oneway():
+    k = 10
     sim = EchoSim(k)
 
     for site in sim.n.sites.values():
-        site.send("method", "a msg")
+        site.send("echo", "a msg")
 
 
 ###############################################################################
-def test_broadcast(k=4):
+def test_broadcast():
+    k = 10
     sim = EchoSim(k)
 
-    sim.n.coord.send("method2", "a coord msg")
+    sim.n.coord.send("echo", "a coord msg")
 
 
 ###############################################################################
 def test_iterations():
-    assert 0 == 1
+    k = 10
+    sim = EchoSim(k)
 
-
-###############################################################################
-def test_total_msgs():
-    assert 0 == 1
-
-
-###############################################################################
-def test_total_bytes():
-    assert 0 == 1
-
-
-###############################################################################
-def test_broadcast_msgs():
-    assert 0 == 1
-
-
-###############################################################################
-def test_broadcast_bytes():
-    assert 0 == 1
-
-
-###############################################################################
-def test_endpoint_msgs():
-    assert 0 == 1
-
-
-###############################################################################
-def test_endpoint_bytes():
-    assert 0 == 1
+    for site in sim.n.sites.values():
+        site.send("answer", 1)

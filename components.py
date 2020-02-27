@@ -37,6 +37,7 @@ class Host:
         """
         self.nid = nid
         self.net = net
+        self.incoming_channels = 0
 
 
 class HostGroup:

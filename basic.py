@@ -20,7 +20,7 @@ class Site(Sender):
     def __init__(self, net, nid, ifc):
         super().__init__(net, nid, ifc)
 
-    def ack(self):
+    def ack(self, arg):
         print("Broadcast working")
 
 
